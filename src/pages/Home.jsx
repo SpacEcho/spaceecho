@@ -40,10 +40,16 @@ export default function Home() {
     queryKey: ['inspirations', activeCategory],
     queryFn: async () => {
       try {
+        let result;
         if (activeCategory === 'all') {
-          return base44.entities.Inspiration.list('-created_date', 50);
+          result = await base44.entities.Inspiration.list('-created_date', 50);
+        } else {
+          result = await base44.entities.Inspiration.filter({ category: activeCategory }, '-created_date', 50);
         }
-        return base44.entities.Inspiration.filter({ category: activeCategory }, '-created_date', 50);
+        if (!result || result.length === 0) {
+          return MOCK_INSPIRATIONS.filter(i => activeCategory === 'all' || i.category === activeCategory);
+        }
+        return result;
       } catch {
         return MOCK_INSPIRATIONS.filter(i => activeCategory === 'all' || i.category === activeCategory);
       }
