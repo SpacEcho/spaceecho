@@ -32,7 +32,7 @@ const AuthenticatedApp = () => {
     if (authError.type === 'user_not_registered') {
       return <UserNotRegisteredError />;
     }
-    // Skip auth_required redirect - allow access without login
+    // For auth_required and other errors, still render the app (public browsing)
   }
 
   // Render the main app
