@@ -24,10 +24,14 @@ export default function Home() {
   const { data: inspirations = [], isLoading } = useQuery({
     queryKey: ['inspirations', activeCategory],
     queryFn: async () => {
-      if (activeCategory === 'all') {
-        return base44.entities.Inspiration.list('-created_date', 50);
+      try {
+        if (activeCategory === 'all') {
+          return base44.entities.Inspiration.list('-created_date', 50);
+        }
+        return base44.entities.Inspiration.filter({ category: activeCategory }, '-created_date', 50);
+      } catch {
+        return MOCK_INSPIRATIONS.filter(i => activeCategory === 'all' || i.category === activeCategory);
       }
-      return base44.entities.Inspiration.filter({ category: activeCategory }, '-created_date', 50);
     },
   });
 
